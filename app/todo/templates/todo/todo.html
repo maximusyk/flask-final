@@ -1,0 +1,173 @@
+{% from "_formhelpers.html" import renderTaskForm,
+renderTaskList %}
+{% extends
+"base.html" %}{% set active_page = "list-check" %}
+{% block title %}
+  ToDo List
+  {%endblock%}
+  {% block body %}
+    <!-- ======= ToDo List Section ======= -->
+    <section id="todo" class="todo">
+      <div class="container" data-aos="fade-up">
+        <div class="section-title">
+          <h2>Tasks</h2>
+        </div>
+
+        <div class="todo-list m-5 p-2 rounded mx-auto bg-light shadow d-flex flex-column">
+          <!-- Task List -->
+          <div id="ToDos" class="task-list">
+            {% if not todos %}
+              <div class="alert alert-secondary" role="alert">
+                <h4 class="alert-heading">There are no tasks!</h4>
+                <p>Please, add new task clicked an 'Add new...' button below.</p>
+              </div>
+            {% endif %}
+            {{ renderTaskList(todos) }}
+          </div>
+
+          <!-- Modal Form -->
+          <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="formModalLabel"></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div id="task-list">
+                    <table id="view-task-table" data-toggle="table">
+                      <thead class="thead-light">
+                        <tr>
+                          <th data-field="Id">Id</th>
+                          <th data-field="Title">Title</th>
+                          <th data-field="Description">Description</th>
+                          <th data-field="Priority">Priority</th>
+                          <th data-field="Created">Created</th>
+                          <th data-field="Deadline">Deadline</th>
+                          <th data-field="Status">Status</th>
+                          <th data-field="Category">Category</th>
+                          <th data-field="Employee">Employees</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+
+                  <div id="cat-list">
+                    <table id="view-cat-table" data-toggle="table">
+                      <thead class="thead-light">
+                        <tr>
+                          <th data-field="Id">Id</th>
+                          <th data-field="Name">Name</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+
+                  <div id="empl-list">
+                    <table id="view-empl-table" data-toggle="table" data-show-footer="true">
+                      <thead class="thead-light">
+                        <tr>
+                          <th data-field="Id">Id</th>
+                          <th data-field="Name">Name</th>
+                          <th data-field="compl_tasks">Completed tasks</th>
+                          <th data-field="todo_tasks">Todo tasks</th>
+                          <th data-field="Title" data-footer-formatter="done_label">Title</th>
+                          <th data-field="Category" data-footer-formatter="done_value">Category</th>
+                          <th data-field="Priority">Priority</th>
+                          <th data-field="Deadline" data-footer-formatter="todo_label">Deadline</th>
+                          <th data-field="Status" data-footer-formatter="todo_value">Status</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+
+                  <form id="todo-form" method="POST" role="form" class="php-email-form" novalidate="novalidate">
+                    {{ form.hidden_tag() }}
+
+                    <div id="task-form">
+                      <div class="row">
+                        <div class="col-md-6">
+                          {{ renderTaskForm(form.title, "Title", reqMethod) }}
+                          {{
+                      renderTaskForm(form.priority, "Priority", reqMethod) }}
+                          {{
+                      renderTaskForm(form.description, "Description", reqMethod)
+                      }}
+                        </div>
+
+                        <div class="col-md-6">
+                          {{ renderTaskForm(form.category, "Category", reqMethod) }}
+                          {{ renderTaskForm(form.timeline, "TimeLine", reqMethod)
+                      }}{{ renderTaskForm(form.employee, "Employees", reqMethod)
+                      }}
+                          <div id="doneBlock">
+                            {{ renderTaskForm(form.is_done, "Is Done", reqMethod) }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="cat-form">
+                      {{ renderTaskForm(formCat.cat_name, "Name", reqMethod) }}
+                      {{
+                  renderTaskForm(formCat.cat_tasks, "Tasks", reqMethod) }}
+                    </div>
+
+                    <div id="empl-form">
+                      {{ renderTaskForm(formEmpl.empl_name, "Name", reqMethod) }}
+                      {{
+                  renderTaskForm(formEmpl.empl_tasks, "Tasks", reqMethod) }}
+                    </div>
+
+                    <div class="mb-3">
+                      <div id="msg" class="alert" role="alert"></div>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button id="closeModal" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                  </button>
+                  <button id="add-btn" type="submit" form="task-form" class="btn btn-primary">
+                    Add new
+                  </button>
+                  <button id="create-btn" type="submit" form="task-form" class="btn btn-primary">
+                    Add
+                  </button>
+                  <button id="update-btn" type="submit" form="task-form" class="btn btn-primary">
+                    Update
+                  </button>
+                  <button id="edit-btn" type="button" form="task-form" class="btn btn-warning">
+                    Edit
+                  </button>
+                  <button id="delete-btn" type="button" form="task-form" class="btn btn-danger">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dropdown">
+            <button type="button" class="mt-auto btn btn-lg btn-block btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Add New
+            </button>
+            <div class="dropdown-menu m-auto dropdown-menu-center">
+              <button id="create-task-form" class="dropdown-item" data-toggle="modal" data-target="#formModal">
+                Task
+              </button>
+              <button id="create-cat-form" class="dropdown-item" data-toggle="modal" data-target="#formModal">
+                Category
+              </button>
+              <button id="create-empl-form" class="dropdown-item" data-toggle="modal" data-target="#formModal">
+                Employee
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End ToDo List -->
+
+  {% endblock %}

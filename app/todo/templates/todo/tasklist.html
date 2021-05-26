@@ -1,0 +1,6 @@
+{% from "_formhelpers.html" import renderTaskList %} {% if not todos %}
+<div class="alert alert-secondary" role="alert">
+  <h4 class="alert-heading">There are no tasks!</h4>
+  <p>Please, add new task clicked an 'Add new...' button below.</p>
+</div>
+{% endif %} {{ renderTaskList(todos) }}

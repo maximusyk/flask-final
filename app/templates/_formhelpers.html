@@ -1,0 +1,194 @@
+{% macro renderContactForm(field, placeHolder, reqMethod) %}
+
+<div
+  class="{% if field.label.text=='Name' or field.label.text=='Email'%}col-md-6{% endif %} form-group"
+>
+  {% if field.errors %} {% set validateStyle = ' is-invalid' if reqMethod ==
+  'POST' else ' ' %} {{field(placeholder = placeHolder, class =
+  "form-control"+validateStyle)}}
+  <div
+    class="invalid-feedback"
+    id="{{field.label.text}}"
+    style="display: block"
+  >
+    {% for error in field.errors %} {{error}} {% endfor %}
+  </div>
+
+  {% else %} {% set validateStyle = ' is-valid' if reqMethod == 'POST' else ' '
+  %} {{field(placeholder = placeHolder, class = "form-control"+validateStyle)}}
+  {% if reqMethod == 'POST' %}
+  <div class="valid-feedback" style="display: block">Looks good!</div>
+
+  {% endif %} {% endif %}
+</div>
+
+{% endmacro %} {% macro renderTaskForm(field, placeHolder, reqMethod) %}
+
+<div class="form-group m-1 p-0">
+  <div class="input-group mb-3">
+    {% if placeHolder == 'Description' %} {% set preIcon =
+    'bx-message-alt-detail' %} {% endif %} {% if field.label.text != 'is_done'
+    %} {% if field.label.text == 'title' %} {% set preIcon = 'bx-task' %} {% set
+    preId = 'pre-title' %} {% endif %} {% if field.label.text == 'priority' %}
+    {% set preIcon = 'bx-list-ol' %} {% set preId = 'pre-priority' %} {% endif
+    %} {% if field.label.text == 'timeline' %} {% set preIcon = 'bx-calendar' %}
+    {% set preId = 'date-range-open' %} {% endif %} {% if placeHolder ==
+    'Category' or field.label.text == "cat_name" %} {% set preIcon =
+    'bx-category-alt' %} {% endif %} {% if placeHolder == 'Employees' %} {% set
+    preIcon = 'bx-user-pin' %} {% endif %} {% if placeHolder == 'Tasks' %} {%
+    set preIcon = 'bx-list-check' %} {% endif %} {% if field.label.text ==
+    'empl_name' %} {% set preIcon = 'bx-user-plus' %} {% endif %}
+    <div class="input-group-prepend">
+      <div id="{{preId}}" class="btn input-group-text">
+        <i class="bx {{preIcon}}"></i>
+      </div>
+    </div>
+    {% endif %} {{field(placeholder = placeHolder, class = "form-control")}}
+  </div>
+  <div id="{{field.label.text}}-validation" style="display: block"></div>
+</div>
+
+{% endmacro %} {% macro renderUserForm(field, placeHolder, reqMethod) %} {% set
+spanClass = '' %} {% if placeHolder == 'Username' %} {% set preIcon = 'fas
+fa-user' %} {% endif %} {% if placeHolder == 'Email' %} {% set preIcon = 'fas
+fa-envelope' %} {% endif %} {% if placeHolder == 'Old Password' %} {% set
+preIcon = 'bx bxs-lock' %} {% set spanClass = 'box-icons' %} {% endif %} {% if
+placeHolder == 'Password' or placeHolder == 'New Password' %} {% set preIcon =
+'bx bxs-lock-alt' %} {% set spanClass = 'box-icons' %} {% endif %} {% if
+placeHolder == 'Confirm Password' %} {% set preIcon = 'bx bx-lock-alt' %} {% set
+spanClass = 'box-icons' %} {% endif %} {% set validateStyle = ' is-valid' if
+reqMethod == 'POST' else ' ' %} {% if placeHolder == 'update_pic' %}
+{{field(placeholder = placeHolder )}} {% elif placeHolder == 'About you ...' %}
+{{field(placeholder = placeHolder, novalidate=True)}}
+<i class="fas fa-exclamation-circle u_times"></i>
+<i class="fas fa-check u_check"></i>
+{% else %} {% if placeHolder == 'Remember me' or placeHolder == 'Admin Role' %}
+<p class="m-0 p-0">
+  {{field(placeholder = placeHolder)}}
+  <label for="{{ field.label.text }}">{{ placeHolder }}</label>
+</p>
+{% else %}
+<span class="{{ spanClass }}">
+  <i class="{{ preIcon }}"></i>
+</span>
+{{field(placeholder = placeHolder)}}
+<i class="fas fa-exclamation-circle u_times"></i>
+<i class="fas fa-check u_check"></i>
+{% endif %} {% endif %} {% endmacro %} {% macro renderTaskList(todos) %} {% if
+todos %} {% for items in todos %} {% if todos[items] %}
+<div
+  id="{{items}}"
+  class="mt-1 categories"
+  data-toggle="modal"
+  data-target="#formModal"
+  onclick="view_todo('{{items}}',2)"
+>
+  <span class="p-1 text-white bg-info rounded-top">{{items}}</span>
+</div>
+{% endif %}
+<div class="todo-group rounded shadow-sm">
+  {% for item in todos[items] %} {% if item.is_done == 1 %} {% set priorityStyle
+  = 'secondary' %} {% set priorityTooltip = 'Done' %} {% set textStyle =
+  'text-muted' %} {% elif item.priority.value == 'high' %} {% set priorityStyle
+  = 'danger' %} {% set priorityTooltip = 'High' %} {% elif item.priority.value
+  == 'medium' %} {% set priorityStyle = 'warning' %} {% set priorityTooltip =
+  'Medium' %} {% else %} {% set priorityStyle = 'success' %} {% set
+  priorityTooltip = 'Success' %} {% endif %}
+  <div id="{{item.id}}" class="todo-item row px-3 align-items-center item">
+    <div
+      class="todo-indicator bg-{{priorityStyle}}"
+      data-toggle="tooltip"
+      data-placement="right"
+      title="{{priorityTooltip}} priority"
+    ></div>
+    {% if item.is_done == 1 %}
+    <div class="m-1 custom-checkbox custom-control">
+      <input
+        id="check-{{ item.id }}"
+        type="checkbox"
+        checked="checked"
+        onchange="done_change('{{item.id}}')"
+      />
+      <label class="custom-control-label" for="check-{{ item.id }}"
+        >&nbsp;</label
+      >
+    </div>
+    {% else %}
+    <div class="m-1 custom-checkbox custom-control">
+      <input
+        class="custom-control-input"
+        id="check-{{ item.id }}"
+        type="checkbox"
+        onchange="done_change('{{item.id}}')"
+      />
+      <label class="custom-control-label" for="check-{{ item.id }}"
+        >&nbsp;</label
+      >
+    </div>
+    {% endif %}
+    <div class="col px-1 m-1 align-items-center {{textStyle}}">
+      <div class="title-wrapper p-0 m-0">
+        <div
+          class="btn p-0 m-0 title {{textStyle}}"
+          data-toggle="modal"
+          data-target="#formModal"
+          onclick="view_todo('{{item.id}}',1)"
+        >
+          <span data-toggle="tooltip" data-placement="right" title="View Task"
+            >{{item.title}}</span
+          >
+        </div>
+        {% if item.empls %}
+        <span class="employees ml-2 badge badge-pill badge-warning">
+          {% for empl in item.empls %}
+          <span
+            class="empls"
+            onclick="view_todo('{{empl.name}}',3)"
+            data-toggle="modal"
+            data-target="#formModal"
+            >{{empl.name}}</span
+          >
+          {% endfor %}
+        </span>
+        {% endif %}
+      </div>
+      <div>{{item.description}}</div>
+    </div>
+    <div class="col-auto m-1 p-0 todo-actions">
+      <div class="row d-flex align-items-center justify-content-end">
+        <h5 class="btn m-0 p-0 px-2">
+          <i
+            class="bx bxs-hourglass text-warning"
+            data-toggle="tooltip"
+            data-html="true"
+            data-placement="left"
+            title="Created date: {{item.created_at}}<br>Due on date: {{item.deadline}}"
+          ></i>
+        </h5>
+        <h5
+          class="btn m-0 p-0 px-2"
+          onclick="edit_todo('{{item.id}}',1)"
+          data-toggle="modal"
+          data-target="#formModal"
+        >
+          <i
+            class="bx bxs-pencil text-info"
+            data-toggle="tooltip"
+            data-placement="left"
+            title="Edit todo"
+          ></i>
+        </h5>
+        <h5 class="btn m-0 p-0 px-2" onclick="delete_todo('{{item.id}}',1)">
+          <i
+            class="bx bxs-trash text-danger"
+            data-toggle="tooltip"
+            data-placement="left"
+            title="Delete todo"
+          ></i>
+        </h5>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endfor %} {% endif %} {% endmacro %}

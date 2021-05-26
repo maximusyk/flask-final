@@ -1,0 +1,102 @@
+{% from "_formhelpers.html" import renderUserForm %}
+
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="user-container">
+      <form
+        method="POST"
+        class="user-edit-form"
+        novalidate="novalidate"
+        enctype="multipart/form-data"
+      >
+        <h2 class="title">Update user info</h2>
+
+        {% if mode == 'user_info' %}
+
+        <div class="edit__info">
+          <div class="input-field">
+            {{ renderUserForm(form_edit.username, "Username", req_method) }}
+          </div>
+          <div class="input-field">
+            {{ renderUserForm(form_edit.email, "Email", req_method) }}
+          </div>
+          <div class="description-field">
+            {{ renderUserForm(form_edit.description, "About you ...",
+            req_method) }}
+          </div>
+          {{ renderUserForm(form_edit.picture, "update_pic", req_method) }}
+        </div>
+
+        <div class="change__pass-label">
+          <p onclick="change_pass_form('{{ current_user.id }}')">
+            Change password
+          </p>
+        </div>
+
+        <div class="change__pass">
+          <div class="input-field">
+            {{ renderUserForm(form_pass.old_pwd, "Old Password", req_method) }}
+          </div>
+          <div class="input-field">
+            {{ renderUserForm(form_pass.new_pwd, "New Password", req_method) }}
+          </div>
+          <div class="input-field">
+            {{ renderUserForm(form_pass.con_pwd, "Confirm Password", req_method)
+            }}
+          </div>
+        </div>
+
+        {% else %}
+
+        <div class="admin-create-form">
+          <div class="input-field">
+            {{ renderUserForm(admin_create_form.username_admin_create,
+            "Username", req_method) }}
+          </div>
+          <div class="input-field">
+            {{ renderUserForm(admin_create_form.email_admin_create, "Email",
+            req_method) }}
+          </div>
+          <div class="input-field">
+            {{ renderUserForm(admin_create_form.password_admin_create,
+            "Password", req_method) }}
+          </div>
+          {% if current_user.username == 'maksymusyk' %}
+          <div class="remember-input-field">
+            {{ renderUserForm(admin_create_form.is_admin_create, "Admin Role",
+            req_method) }}
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="admin-update-form">
+          <div class="input-field">
+            {{ renderUserForm(admin_update_form.username_admin_update,
+            "Username", req_method) }}
+          </div>
+          <div class="input-field">
+            {{ renderUserForm(admin_update_form.email_admin_update, "Email",
+            req_method) }}
+          </div>
+          {% if current_user.username == 'maksymusyk' %}
+          <div class="remember-input-field">
+            {{ renderUserForm(admin_update_form.is_admin_update, "Admin Role",
+            req_method) }}
+          </div>
+          {% endif %}
+        </div>
+
+        {% endif %}
+
+        <btn-group>
+          <button type="button" class="btn close-btn" data-dismiss="modal">
+            Close
+          </button>
+          <button id="user-edit-submit" type="button" class="btn">
+            Update
+          </button>
+        </btn-group>
+      </form>
+    </div>
+  </div>
+</div>

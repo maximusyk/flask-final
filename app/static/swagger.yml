@@ -1,0 +1,157 @@
+---
+openapi: 3.0.0
+info:
+  title: Task API
+  version: 1.0.0
+paths:
+  "/api/v2/tasks":
+    get:
+      tags:
+        - View Tasks
+      summary: Returns all task
+      responses:
+        "200":
+          description: The response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ViewTask"
+    post:
+      tags:
+        - Task Manipulation
+      summary: Create new Task
+      requestBody:
+        description: Create Task Object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskPostBody"
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ViewTask"
+  "/api/v2/tasks/{id}":
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Task ID we want to manipulate
+        schema:
+          $ref: "#/components/schemas/id"
+    get:
+      tags:
+        - View Tasks
+      summary: View Task by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Request Task ID
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ViewTask"
+        404:
+          description: Failed. Task not found.
+
+    put:
+      tags:
+        - Task Manipulation
+      summary: Edit Task by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Request Task ID
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        description: Update Task Object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskPostBody"
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ViewTask"
+
+    delete:
+      summary: Delete Task by ID
+      tags:
+        - Task Manipulation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Task Request Id
+          schema:
+            "$ref": "#/components/schemas/id"
+      responses:
+        204:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/id"
+        404:
+          description: Failed. Task not found.
+
+components:
+  schemas:
+    id:
+      properties:
+        id:
+          type: integer
+    ViewTask:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: number
+        title:
+          type: string
+          format: string
+        description:
+          type: string
+          format: string
+        created:
+          type: string
+          format: string
+        priority:
+          type: string
+          format: string
+        is_done:
+          type: boolean
+          format: string
+        category_id:
+          type: integer
+          format: number
+    TaskPostBody:
+      type: object
+      properties:
+        title:
+          type: string
+          format: string
+        description:
+          type: string
+          format: string
+        priority:
+          type: string
+          format: string
+        category_id:
+          type: integer
+          format: number

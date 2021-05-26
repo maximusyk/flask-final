@@ -1,0 +1,68 @@
+{% from "_formhelpers.html" import renderContactForm %}
+{% extends "base.html" %}{% set active_page = "envelope" %}
+{% block title %}
+  Contact
+  {%endblock%}
+  {% block body %}
+    <!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact">
+      <div class="container" data-aos="fade-up">
+        <div class="section-title">
+          <h2>Contact</h2>
+        </div>
+
+        <div class="row mt-1">
+          <div class="col-lg-4">
+            <div class="info">
+              <div class="address">
+                <i class="icofont-google-map"></i>
+                <h4>Location:</h4>
+                <p>Zankovetska Street, Ivano-Frankivsk, 77343</p>
+              </div>
+
+              <div class="email">
+                <i class="icofont-envelope"></i>
+                <h4>Email:</h4>
+                <p>22usyk08@gmail.com</p>
+              </div>
+
+              <div class="phone">
+                <i class="icofont-phone"></i>
+                <h4>Call:</h4>
+                <p>+380 96 469 0828</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-8 mt-5 mt-lg-0">
+            <form action="{{ url_for('contact_bp.contact') }}" method="POST" role="form" class="php-email-form" novalidate="novalidate">
+              <div class="form-row">
+
+                {{form.csrf_token}}
+                {% if session.get('name')is none %}
+                  {{ renderContactForm(form.name, "Your Name", reqMethod) }}
+                  {{ renderContactForm(form.email, "Your Email", reqMethod) }}
+                {% endif %}
+              </div>
+              {{ renderContactForm(form.subject, "Subject", reqMethod) }}
+              {{ renderContactForm(form.message, "Message", reqMethod) }}
+              <div class="mb-3">
+                {% set messages = get_flashed_messages(with_categories = True) %}
+                {% if messages %}
+                  {% for ctg, msg in messages %}
+                    <div class="alert alert-{% if ctg == 'message' %}success{% endif %}{% if ctg == 'error' %}danger{% endif %}" role="alert">
+                      {{ msg }}
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+              <div class="text-center">
+                <button id="submitBtn" type="submit">Send Message</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    -->
+    <!-- End Contact Section {%endblock%}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}{% set active_page = "user" %} {% block title %}
+Account {%endblock%} {% block body %}
+<section id="user" class="user">
+  <div class="section-title">
+    {% if current_user.admin %}
+
+    <form class="toggle">
+      <input type="radio" id="choice1" name="choice" value="creative" />
+      <label for="choice1">Admin Panel</label>
+
+      <input type="radio" id="choice2" name="choice" value="productive" />
+      <label for="choice2">User Info</label>
+
+      <div id="flap"><span class="content">productive</span></div>
+    </form>
+
+    {% else %}
+
+    <h2>Tasks</h2>
+
+    {% endif %}
+  </div>
+
+  <div id="switch-panel">
+    <div class="profile front shadow-lg">
+      <div class="profile__header">
+        <div
+          class="profile__img rounded-circle shadow-lg"
+          style="background: center / contain no-repeat url('{{ image_file }}')"
+        >
+          <span>
+            <i
+              class="fas fa-user-edit"
+              onclick="user_info_edit('{{ current_user.id }}')"
+              data-toggle="modal"
+              data-target="#userEditModal"
+            ></i>
+          </span>
+        </div>
+        <div class="waves">
+          <div class="wave wave1"></div>
+          <div class="wave wave2"></div>
+          <div class="wave wave3"></div>
+          <div class="wave wave4"></div>
+        </div>
+      </div>
+
+      <div class="profile__content">
+        <div class="user__title">
+          <h3>{{ current_user.username }}</h3>
+        </div>
+
+        <div class="user__email">
+          <h4>{{ current_user.email }}</h4>
+        </div>
+
+        <div class="user__visit">
+          <p>Last seen {{last_seen}}</p>
+        </div>
+
+        <div class="user__description">
+          <p>
+            {% if current_user.description %} {{ current_user.description }} {%
+            else %} Please, tell us somemething about you &#128521; {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {% if current_user.is_admin() %}
+
+    <div class="user-list back shadow-lg">
+      <div class="table-title">
+        <div class="col-xs-5">
+          <h2>User <b>Management</b></h2>
+        </div>
+        <div class="col-xs-7">
+          <a
+            href="#"
+            onclick="admin_create()"
+            data-toggle="modal"
+            data-target="#userEditModal"
+            class="btn btn-primary"
+            ><i class="material-icons">&#xE147;</i> <span>Add New User</span></a
+          >
+          <a href="/admin" class="btn btn-primary"
+            ><i class="material-icons">manage_accounts</i>
+            <span>Use Flask-Admin</span></a
+          >
+        </div>
+      </div>
+      <table id="user-list" class="table" data-url="static/users.json">
+        <thead>
+          <th data-field="id">#</th>
+          <th data-field="name" data-sortable="true">Name</th>
+          <th data-field="date_created" data-sortable="true">Date Created</th>
+          <th data-field="last_seen" data-sortable="true">Last Seen</th>
+          <th data-field="role" data-sortable="true">Role</th>
+          <th data-field="actions">Action</th>
+        </thead>
+      </table>
+    </div>
+    {% endif %}
+  </div>
+  <div class="modal" id="userEditModal"></div>
+</section>
+{% endblock %}

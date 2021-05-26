@@ -1,0 +1,36 @@
+<nav class="nav-menu">
+  <ul>
+    {% for caption, href,
+    id in menu %}
+      <li {% if id==active_page %} class="active" {% endif %}>
+        {% if caption | e == "User" %}
+          {% if current_user.is_authenticated %}
+            {% if id == active_page %}
+              {%set user_href = "/logout" %}
+              {%set user_text = "Logout" %}
+            {% else %}
+              {%set user_href = "/account" %}
+              {%set user_text = current_user.username %}
+            {% endif %}
+            <a href="{{ user_href }}" class="btn">
+              <i class="bx bx-{{id|e}}"></i>
+              <span>
+                {{ user_text }}
+              </span>
+            </a>
+          {% else %}
+            <a onclick="render_auth_modal()" class="btn" data-toggle="modal" data-target="#userModal">
+              <i class="bx bx-{{id|e}}"></i>
+              <span>Sign up</span>
+            </a>
+          {% endif %}
+        {% else %}
+          <a href="{{href|e}}">
+            <i class="bx bx-{{id|e}}"></i>
+            <span>{{caption|e}}</span>
+          </a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
