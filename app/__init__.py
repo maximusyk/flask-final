@@ -21,7 +21,7 @@ from .users import users
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object("config.DevelopmentConfig")
+    app.config.from_object("config.ProductionConfig")
 
     db.init_app(app)
     ma.init_app(app)
