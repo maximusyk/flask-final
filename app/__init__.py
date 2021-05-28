@@ -30,18 +30,18 @@ def create_app():
 
     create_admin(app)
 
-    with app.app_context():
-        db.create_all()
+    app.app_context().push()
+    db.create_all()
 
-        app.register_blueprint(home.home_bp)
-        app.register_blueprint(about.about_bp)
-        app.register_blueprint(portfolio.portfolio_bp)
-        app.register_blueprint(contact.contact_bp)
-        app.register_blueprint(todo.todo_bp)
-        app.register_blueprint(swagger_bp, url_prefix="/swagger")
-        app.register_blueprint(users.users_bp)
-        app.register_blueprint(api.api_bp, url_prefix="/api")
-        app.register_blueprint(rest.api_rest_bp, url_prefix="/api/v2")
+    app.register_blueprint(home.home_bp)
+    app.register_blueprint(about.about_bp)
+    app.register_blueprint(portfolio.portfolio_bp)
+    app.register_blueprint(contact.contact_bp)
+    app.register_blueprint(todo.todo_bp)
+    app.register_blueprint(swagger_bp, url_prefix="/swagger")
+    app.register_blueprint(users.users_bp)
+    app.register_blueprint(api.api_bp, url_prefix="/api")
+    app.register_blueprint(rest.api_rest_bp, url_prefix="/api/v2")
 
     # print("\n<<=== URL MAP ===>>")
     # print(app.url_map)
