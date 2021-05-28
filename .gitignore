@@ -2,5 +2,4 @@ venv
 .flasknv
 .jshintrc
 dump.json
-flask_course.db
 screens
