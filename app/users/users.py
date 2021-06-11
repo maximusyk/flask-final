@@ -265,26 +265,20 @@ def user_signin():
     if current_user.is_authenticated:
         return redirect(url_for("users_bp.account"))
     else:
-        auth = request.authorization
-        print(auth)
-        print(auth.username)
-        print(auth.password)
+        # auth = request.authorization
 
-        if not auth or not auth.username or not auth.password:
-            return "Could not verify", 401
+        # user = User.query.filter_by(username=auth.username).first()
 
-        user = User.query.filter_by(username=auth.username).first()
-
-        if user.verify_password(auth.password):
-            token = jwt.encode(
-                {"public_id": user.id, "exp": datetime.utcnow() + timedelta(minutes=30)},
-                app.config["SECRET_KEY"],
-                algorithm="HS256",
-            )
-            data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
-            print(data)
-            print(token)
-            return jsonify({"token": token})
+        # if user.verify_password(auth.password):
+        #     token = jwt.encode(
+        #         {"public_id": user.id, "exp": datetime.utcnow() + timedelta(minutes=30)},
+        #         app.config["SECRET_KEY"],
+        #         algorithm="HS256",
+        #     )
+        #     data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
+        #     print(data)
+        #     print(token)
+        #     return jsonify({"token": token})
 
         if form.validate_on_submit():
             email = request.form["email_in"]

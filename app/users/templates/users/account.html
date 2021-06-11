@@ -89,7 +89,11 @@ Account {%endblock%} {% block body %}
           >
         </div>
       </div>
-      <table id="user-list" class="table" data-url="static/users.json">
+      <table
+        id="user-list"
+        class="table"
+        data-url="{{ url_for( 'static', filename='users.json' ) }}"
+      >
         <thead>
           <th data-field="id">#</th>
           <th data-field="name" data-sortable="true">Name</th>
