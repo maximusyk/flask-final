@@ -8,7 +8,7 @@ class Config(object):
     TESTING = False
 
     SECRET_KEY = os.environ.get("SECRET_KEY") or "you-will-never-guess"
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or "sqlite:///" + os.path.join(basedir, "flask_course.db")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or "postgresql:///" + os.path.join(basedir, "flask_course.db")
 
 
 class ProductionConfig(Config):
