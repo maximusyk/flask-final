@@ -246,6 +246,7 @@ def user_signup():
 
                 return json.dumps({"success": "OK", "Title": "User successfuly registered"})
             except Exception as e:
+                db.session.rollback()
                 json.dump(
                     {
                         "success": "BAD",
